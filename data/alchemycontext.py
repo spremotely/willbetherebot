@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from context import Context
+from data.context import Context
 
 
 class AlchemyContext(Context):

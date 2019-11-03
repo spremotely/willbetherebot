@@ -1,5 +1,5 @@
 from models import State
-from staterepository import StateRepository
+from data.staterepository import StateRepository
 
 
 class AlchemyStateRepository(StateRepository):
