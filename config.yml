@@ -2,6 +2,6 @@ bot:
   token: 968428867:AAHrsueLKGNOT2mKEQfcyGaIykHqdeGzOvg
 db:
   host: ''
-  port: ''
+  name: ''
   username: ''
   password: ''

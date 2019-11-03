@@ -1,10 +1,15 @@
 import yaml
 import telebot
 
+from data.alchemycontext import AlchemyContext
+from data.alchemystaterepository import AlchemyStateRepository
+
 with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
 
 bot = telebot.TeleBot(config['bot']['token'])
+context = AlchemyContext(f"mysql+mysqlconnector://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['name']}")
+state_repository = AlchemyStateRepository(context)
 
 
 @bot.message_handler(commands=['start'])
