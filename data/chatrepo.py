@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
 
-class Context(ABC):
+class ChatRepo(ABC):
 
     @abstractmethod
-    def get_context(self):
+    def get_chat(self, chat_id):
         pass
 
     @abstractmethod
-    def save_changes(self):
+    def create_chat(self, type):
         pass
