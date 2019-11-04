@@ -8,5 +8,5 @@ class ChatRepo(ABC):
         pass
 
     @abstractmethod
-    def create_chat(self, type):
+    def create_chat(self, chat_id, chat_type):
         pass

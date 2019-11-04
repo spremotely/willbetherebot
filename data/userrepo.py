@@ -8,5 +8,5 @@ class UserRepo(ABC):
         pass
 
     @abstractmethod
-    def create_user(self, user_name, first_name, last_name, is_bot=False):
+    def create_user(self, user_id, user_name, first_name, last_name, is_bot=False):
         pass

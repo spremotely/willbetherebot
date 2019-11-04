@@ -18,11 +18,21 @@ class User(Base):
     is_bot = Column(Boolean)
     state = relationship("State", uselist=False, back_populates="user")
 
-    def __init__(self, user_name, first_name, last_name, is_bot=False):
+    def __init__(
+            self,
+            user_id,
+            user_name,
+            first_name,
+            last_name,
+            is_bot=False):
+        self.id = user_id
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name
         self.is_bot = is_bot
+
+    def __repr__(self):
+        return f"<User({self.id}, {self.user_name}, {self.first_name}, {self.last_name}, {self.is_bot})>"
 
 
 class Chat(Base):
@@ -33,8 +43,12 @@ class Chat(Base):
     type = Column(String(50))
     state = relationship("State", uselist=False, back_populates="chat")
 
-    def __init__(self, chat_type):
+    def __init__(self, chat_id, chat_type):
+        self.id = chat_id
         self.type = chat_type
+
+    def __repr__(self):
+        return f"<Chat({self.id}, {self.type})>"
 
 
 class State(Base):
