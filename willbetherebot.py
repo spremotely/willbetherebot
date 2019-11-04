@@ -26,7 +26,7 @@ def start_message(message):
 
 @bot.message_handler(commands=['add'])
 def add_message(message):
-    user, chat = process_chat_user(message)
+    chat, user = process_chat_user(message)
 
 
 @bot.message_handler
