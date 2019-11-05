@@ -27,6 +27,7 @@ def start_message(message):
 @bot.message_handler(commands=['add'])
 def add_message(message):
     chat, user = process_chat_user(message)
+    process_add_command(chat, user, message.message_id)
 
 
 @bot.message_handler
@@ -68,6 +69,15 @@ def process_chat_user(message):
 
     context.save_changes()
     return chat, user
+
+
+def process_add_command(chat, user, message_id):
+    state = state_repo.get_state(chat.id, user.id)
+
+    if not state:
+        state = state_repo.create_state(chat, user, message_id, "add", "init")
+
+    context.save_changes()
 
 
 bot.polling()

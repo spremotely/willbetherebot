@@ -67,6 +67,17 @@ class State(Base):
     state = Column(String(50))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+    def __init__(self, chat, user, message_id, command, state, entity=None):
+        self.chat = chat
+        self.user = user
+        self.message_id = message_id
+        self.command = command
+        self.state = state
+        self.entity = entity
+
+    def __repr__(self):
+        return f"<State({self.id}, {self.chat_id}, {self.user_id}, {self.message_id}, {self.command}, {self.state}, {self.updated_at})>"
+
 
 class Entity(Base):
 
