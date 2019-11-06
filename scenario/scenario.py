@@ -3,16 +3,13 @@ from abc import ABC, abstractmethod
 
 class Scenario(ABC):
 
-    _next_scenario: None
+    @abstractmethod
+    def __init__(self, scenario=None):
+        self._scenario = scenario
 
     @abstractmethod
-    def set_next(self, scenario):
-        self._next_scenario = scenario
-        return scenario
+    def handle(self, chat, user, state, message):
+        if self._scenario:
+            return self._scenario.handle(chat, user, state, message)
 
-    @abstractmethod
-    def handle(self, chat, user, message):
-        if self._next_scenario:
-            return self._next_scenario.handle(chat, user, message)
-
-        return None
+        return

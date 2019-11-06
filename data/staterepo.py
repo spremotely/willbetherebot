@@ -8,9 +8,9 @@ class StateRepo(ABC):
         pass
 
     @abstractmethod
-    def create_state(self, chat, user, message_id, command, state, entity=None):
+    def create_state(self, chat, user, message_id, command, state_value, entity=None):
         pass
 
     @abstractmethod
-    def update_state(self, state_id, command, state, entity=None):
+    def update_state(self, state_id, command, state_value, entity=None):
         pass

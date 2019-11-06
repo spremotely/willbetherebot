@@ -1,11 +1,13 @@
 import yaml
 import telebot
 
+import scenario
 from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemystaterepo import AlchemyStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
-from scenario.welcomeaddscenario import WelcomeAddScenario
+from scenario.start.welcome import Welcome
+from scenario.add.welcome import Welcome
 
 with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
@@ -18,41 +20,13 @@ user_repo = AlchemyUserRepo(context)
 chat_repo = AlchemyChatRepo(context)
 
 
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(
-        message.chat.id,
-        "Этот бот сохраняет места для будущего посещения")
-
-
-@bot.message_handler(commands=['add'])
-def add_message(message):
+@bot.message_handler()
+def any_message(message):
     chat, user = process_chat_user(message)
-    result = process_add_command(chat, user, message)
+    result = process_scenario(chat, user, message)
 
     if result:
-        bot.send_message(message.chat.id, result)
-
-
-@bot.message_handler
-def text_message(message):
-    pass
-
-
-@bot.message_handler(content_types=['photo'])
-def image_message(message):
-    print(message)
-    pass
-
-
-@bot.message_handler(content_types=['location'])
-def location_message(message):
-    print(message)
-    pass
-
-
-def process_location():
-    pass
+        bot.send_message(chat_id=message.chat.id, text=result)
 
 
 def process_chat_user(message):
@@ -75,9 +49,12 @@ def process_chat_user(message):
     return chat, user
 
 
-def process_add_command(chat, user, message):
-    welcome_scenario = WelcomeAddScenario(context, state_repo)
-    return welcome_scenario.handle(chat, user, message)
+def process_scenario(chat, user, message):
+    state = state_repo.get_state(chat.id, user.id)
+    scn = scenario.start.welcome.Welcome(
+        context, state_repo, scenario.add.welcome.Welcome(
+            context, state_repo))
+    return scn.handle(chat, user, state, message)
 
 
 bot.polling()
