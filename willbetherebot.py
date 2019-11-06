@@ -5,6 +5,7 @@ from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemystaterepo import AlchemyStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
+from scenario.welcomeaddscenario import WelcomeAddScenario
 
 with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
@@ -27,7 +28,10 @@ def start_message(message):
 @bot.message_handler(commands=['add'])
 def add_message(message):
     chat, user = process_chat_user(message)
-    process_add_command(chat, user, message.message_id)
+    result = process_add_command(chat, user, message)
+
+    if result:
+        bot.send_message(message.chat.id, result)
 
 
 @bot.message_handler
@@ -71,13 +75,9 @@ def process_chat_user(message):
     return chat, user
 
 
-def process_add_command(chat, user, message_id):
-    state = state_repo.get_state(chat.id, user.id)
-
-    if not state:
-        state = state_repo.create_state(chat, user, message_id, "add", "init")
-
-    context.save_changes()
+def process_add_command(chat, user, message):
+    welcome_scenario = WelcomeAddScenario(context, state_repo)
+    return welcome_scenario.handle(chat, user, message)
 
 
 bot.polling()

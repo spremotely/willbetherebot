@@ -14,3 +14,15 @@ class AlchemyStateRepo(StateRepo):
         state = State(chat, user, message_id, command, state, entity)
         self.__session.add(state)
         return state
+
+    def update_state(self, state_id, command, state, entity=None):
+        state = self.__session.query(State).filter_by(id=state_id).first()
+
+        if not state:
+            return
+
+        state.command = command
+        state.state = state
+        state.entity = entity
+
+        return state
