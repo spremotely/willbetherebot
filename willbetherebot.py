@@ -8,6 +8,7 @@ from data.alchemystaterepo import AlchemyStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
 from scenario.start.welcome import Welcome
 from scenario.add.welcome import Welcome
+from scenario.add.photo import Photo
 
 with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
@@ -20,7 +21,7 @@ user_repo = AlchemyUserRepo(context)
 chat_repo = AlchemyChatRepo(context)
 
 
-@bot.message_handler()
+@bot.message_handler(content_types=['text', 'photo', 'location'])
 def any_message(message):
     chat, user = process_chat_user(message)
     result = process_scenario(chat, user, message)
@@ -53,7 +54,8 @@ def process_scenario(chat, user, message):
     state = state_repo.get_state(chat.id, user.id)
     scn = scenario.start.welcome.Welcome(
         context, state_repo, scenario.add.welcome.Welcome(
-            context, state_repo))
+            context, state_repo, scenario.add.photo.Photo(
+                context, state_repo)))
     return scn.handle(chat, user, state, message)
 
 

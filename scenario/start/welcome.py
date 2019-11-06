@@ -13,7 +13,7 @@ class Welcome(Scenario):
         super().__init__(scenario)
 
     def handle(self, chat, user, state, message):
-        if not message.text.startswith("/start"):
+        if message.content_type != "text" or not message.text.startswith("/start"):
             return super().handle(chat, user, state, message)
 
         if not state:
@@ -29,4 +29,4 @@ class Welcome(Scenario):
         if state.command == "start" and state.state == "welcome":
             return self.MESSAGE
 
-        return self.MESSAGE
+        return super().handle(chat, user, state, message)

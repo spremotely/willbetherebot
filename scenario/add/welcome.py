@@ -11,7 +11,7 @@ class Welcome(Scenario):
         super().__init__(scenario)
 
     def handle(self, chat, user, state, message):
-        if not message.text.startswith("/add"):
+        if message.content_type != "text" or not message.text.startswith("/add"):
             return super().handle(chat, user, state, message)
 
         if not state:
