@@ -10,3 +10,7 @@ class Context(ABC):
     @abstractmethod
     def save_changes(self):
         pass
+
+    @abstractmethod
+    def close(self):
+        pass

@@ -1,7 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+
+from data.repo import Repo
 
 
-class StateRepo(ABC):
+class StateRepo(Repo):
 
     @abstractmethod
     def get_state(self, chat_id, user_id):

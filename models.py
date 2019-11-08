@@ -34,6 +34,13 @@ class User(Base):
     def __repr__(self):
         return f"<User({self.id}, {self.user_name}, {self.first_name}, {self.last_name}, {self.is_bot})>"
 
+    def __eq__(self, other):
+        return other.id == self.id \
+            and other.user_name == self.user_name \
+            and other.first_name == self.first_name \
+            and other.last_name == self.last_name \
+            and other.is_bot == self.is_bot
+
 
 class Chat(Base):
 

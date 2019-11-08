@@ -1,7 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+
+from data.repo import Repo
 
 
-class UserRepo(ABC):
+class UserRepo(Repo):
 
     @abstractmethod
     def get_user(self, user_id):

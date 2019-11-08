@@ -3,12 +3,12 @@ from abc import abstractmethod
 from data.repo import Repo
 
 
-class ChatRepo(Repo):
+class PhotoRepo(Repo):
 
     @abstractmethod
-    def get_chat(self, chat_id):
+    def get_photo(self, photo_id):
         pass
 
     @abstractmethod
-    def create_chat(self, chat_id, chat_type):
+    def create_photo(self, uri):
         pass
