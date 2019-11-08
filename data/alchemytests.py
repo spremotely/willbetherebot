@@ -4,7 +4,7 @@ import unittest
 from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemyuserrepo import AlchemyUserRepo
-from models import User
+from models import User, Chat
 
 
 class AlchemyRepo(unittest.TestCase):
@@ -26,14 +26,15 @@ class AlchemyChatRepoTest(AlchemyRepo):
 
     def setUp(self):
         self.chat_repo = AlchemyChatRepo(self.context)
+        self.chat = Chat(1, "private")
 
     def test_create_chat(self):
-        chat = self.chat_repo.create_chat(1, "test")
-        self.assertEqual(chat.id, 1)
+        chat = self.chat_repo.create_chat(self.chat.id, self.chat.type)
+        self.assertEqual(chat, self.chat)
 
     def test_get_chat(self):
-        chat = self.chat_repo.get_chat(1)
-        self.assertIsNotNone(chat)
+        chat = self.chat_repo.get_chat(self.chat.id)
+        self.assertEqual(chat, self.chat)
 
 
 class AlchemyUserRepoTest(AlchemyRepo):

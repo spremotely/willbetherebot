@@ -57,6 +57,9 @@ class Chat(Base):
     def __repr__(self):
         return f"<Chat({self.id}, {self.type})>"
 
+    def __eq__(self, other):
+        return other.id == self.id and other.type == self.type
+
 
 class State(Base):
 
