@@ -50,8 +50,6 @@ class Chat(Base):
     def __repr__(self):
         return f"<Chat({self.id}, {self.type})>"
 
-    def __eq__(self, other):
-        return other.id == self.id and other.type == self.type
 
 
 class ChatState(Base):
@@ -81,16 +79,6 @@ class ChatState(Base):
     def __repr__(self):
         return f"<State({self.id}, {self.chat}, {self.user}, {self.message_id}, {self.command}, {self.state}, {self.entity}, {self.updated_at})>"
 
-    def __eq__(self, other):
-        return other.id == self.id and \
-            other.chat_id == self.chat_id and \
-            other.user_id == self.user_id and \
-            other.message_id == self.message_id and \
-            other.entity_id == self.entity_id and \
-            other.command == self.command and \
-            other.state == self.state and \
-            other.updated_at == self.updated_at
-
 
 class Entity(Base):
 
@@ -108,11 +96,6 @@ class Entity(Base):
     def __repr__(self):
         return f"<Entity({self.id}, {self.entity_id}, {self.entity_type})>"
 
-    def __eq__(self, other):
-        return other.id == self.id and \
-            other.entity_id == self.entity_id and \
-            other.entity_type == self.entity_type
-
 
 class Photo(Base):
 
@@ -127,9 +110,6 @@ class Photo(Base):
 
     def __repr__(self):
         return f"<Photo({self.id}, {self.uri}, {self.location})>"
-
-    def __eq__(self, other):
-        return other.id == self.id and other.uri == self.uri and other.location == self.location
 
 
 class Location(Base):
@@ -149,10 +129,3 @@ class Location(Base):
 
     def __repr__(self):
         return f"<Location({self.id}, {self.photo_id}, {self.longitude}, {self.latitude}, {self.created_at})>"
-
-    def __eq__(self, other):
-        return other.id == self.id and \
-            other.photo_id == self.photo_id and \
-            other.longitude == self.longitude and \
-            other.latitude == self.latitude and \
-            other.created_at == self.created_at

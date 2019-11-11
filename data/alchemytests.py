@@ -11,8 +11,8 @@ from models import User, Chat, ChatState, Entity
 
 class FakeChat:
 
-    def __init__(self, chat_id, type, state):
-        self.id = chat_id
+    def __init__(self, pk, type, state):
+        self.id = pk
         self.type = type
         self.state = state
 
@@ -43,6 +43,48 @@ class FakeUser:
             other.first_name == self.first_name and \
             other.last_name == self.last_name and \
             other.is_bot == self.is_bot
+
+
+class FakeEntity:
+
+    def __init__(self, pk, entity_id, entity_type):
+        self.id = pk
+        self.entity_id = entity_id
+        self.entity_type = entity_type
+
+    def __eq__(self, other):
+        return other.id == self.id and other.entity_id == self.entity_id and other.entity_type == self.entity_type
+
+
+class FakeChatState:
+
+    def __init__(
+            self,
+            state_id,
+            chat,
+            user,
+            message_id,
+            entity,
+            command,
+            state_value):
+        self.id = state_id
+        self.chat = chat
+        self.chat_id = chat.id
+        self.user = user
+        self.user_id = user.id
+        self.entity = entity
+        self.entity_id = entity.id
+        self.message_id = message_id
+        self.command = command
+        self.state = state_value
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.chat_id == self.chat_id and \
+            other.user_id == self.user_id and \
+            other.entity_id == self.entity_id and \
+            other.message_id == self.message_id and \
+            other.command == self.command
 
 
 class AlchemyRepo(unittest.TestCase):
@@ -79,7 +121,13 @@ class AlchemyUserRepoTest(AlchemyRepo):
 
     def setUp(self):
         self.user_repo = AlchemyUserRepo(self.context)
-        self.user = FakeUser(1, "user name", "first name", "last name", False, None)
+        self.user = FakeUser(
+            1,
+            "user name",
+            "first name",
+            "last name",
+            False,
+            None)
 
     def test_create_user(self):
         user = self.user_repo.create_user(
@@ -99,7 +147,7 @@ class AlchemyEntityRepoTest(AlchemyRepo):
 
     def setUp(self):
         self.entity_repo = AlchemyEntityRepo(self.context)
-        self.entity = Entity(10, "photo")
+        self.entity = FakeEntity(1, 10, "photo")
         self.entity.id = 1
 
     def test_create_entity(self):
@@ -115,28 +163,30 @@ class AlchemyStateRepoTest(AlchemyRepo):
         self.user_repo = AlchemyUserRepo(self.context)
         self.entity_repo = AlchemyEntityRepo(self.context)
         self.state_repo = AlchemyChatStateRepo(self.context)
-        self.chat = self.chat_repo.create_chat(10, "private")
+
+        self.fake_chat = FakeChat(1, "private", None)
+        self.fake_user = FakeUser(1, "user name", "first name", "last name", False, None)
+        self.fake_entity = FakeEntity(1, 10, "photo")
+        self.fake_state = FakeChatState(1, self.fake_chat, self.fake_user, 20, self.fake_entity, "add", "welcome")
+
+        self.chat = self.chat_repo.create_chat(1, "private")
         self.user = self.user_repo.create_user(
-            20,
+            1,
             "user name",
             "first name",
             "last name")
         self.entity = self.entity_repo.create_entity(
-            30, "photo")
+            10, "photo")
 
     def test_create_state(self):
         state = self.state_repo.create_state(
             self.chat,
             self.user,
-            40,
+            20,
             "add",
             "welcome",
             self.entity)
         with self.subTest(state=state):
-            self.assertEqual(state.chat_id, self.chat.id)
+            self.assertEqual(state, self.fake_state)
         with self.subTest(state=state):
-            self.assertEqual(state.user_id, self.user.id)
-        with self.subTest(state=state):
-            self.assertEqual(state.entity_id, self.entity.id)
-        with self.subTest(state=state):
-            self.assertEqual(state.id, 1)
+            self.assertIsNotNone(state.updated_at)
