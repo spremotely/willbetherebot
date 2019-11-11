@@ -9,6 +9,17 @@ from data.alchemyuserrepo import AlchemyUserRepo
 from models import User, Chat, ChatState, Entity
 
 
+class FakeChat:
+
+    def __init__(self, chat_id, type, state):
+        self.id = chat_id
+        self.type = type
+        self.state = state
+
+    def __eq__(self, other):
+        return other.id == self.id and other.type == self.type
+
+
 class FakeUser:
 
     def __init__(
@@ -53,7 +64,7 @@ class AlchemyChatRepoTest(AlchemyRepo):
 
     def setUp(self):
         self.chat_repo = AlchemyChatRepo(self.context)
-        self.chat = Chat(1, "private")
+        self.chat = FakeChat(1, "private", None)
 
     def test_create_chat(self):
         chat = self.chat_repo.create_chat(self.chat.id, self.chat.type)
