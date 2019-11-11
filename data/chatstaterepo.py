@@ -14,5 +14,5 @@ class ChatStateRepo(Repo):
         pass
 
     @abstractmethod
-    def update_state(self, state_id, command, state_value):
+    def update_state(self, state_id, command, state_value, message_id, entity=None):
         pass

@@ -165,28 +165,60 @@ class AlchemyStateRepoTest(AlchemyRepo):
         self.state_repo = AlchemyChatStateRepo(self.context)
 
         self.fake_chat = FakeChat(1, "private", None)
-        self.fake_user = FakeUser(1, "user name", "first name", "last name", False, None)
+        self.fake_user = FakeUser(
+            1,
+            "user name",
+            "first name",
+            "last name",
+            False,
+            None)
         self.fake_entity = FakeEntity(1, 10, "photo")
-        self.fake_state = FakeChatState(1, self.fake_chat, self.fake_user, 20, self.fake_entity, "add", "welcome")
+        self.fake_entity_update = FakeEntity(2, 11, "location")
+        self.fake_state = FakeChatState(
+            1,
+            self.fake_chat,
+            self.fake_user,
+            20,
+            self.fake_entity,
+            "add",
+            "welcome")
+        self.fake_state_update = FakeChatState(
+            1,
+            self.fake_chat,
+            self.fake_user,
+            30,
+            self.fake_entity_update,
+            "add",
+            "location")
 
-        self.chat = self.chat_repo.create_chat(1, "private")
-        self.user = self.user_repo.create_user(
+    def test_create_state(self):
+        chat = self.chat_repo.create_chat(1, "private")
+        user = self.user_repo.create_user(
             1,
             "user name",
             "first name",
             "last name")
-        self.entity = self.entity_repo.create_entity(
+        entity = self.entity_repo.create_entity(
             10, "photo")
 
-    def test_create_state(self):
         state = self.state_repo.create_state(
-            self.chat,
-            self.user,
+            chat,
+            user,
             20,
             "add",
             "welcome",
-            self.entity)
+            entity)
         with self.subTest(state=state):
             self.assertEqual(state, self.fake_state)
         with self.subTest(state=state):
             self.assertIsNotNone(state.updated_at)
+
+    def test_get_state(self):
+        state = self.state_repo.get_state(self.fake_chat.id, self.fake_user.id)
+        self.assertEqual(state, self.fake_state)
+
+    def test_update_state(self):
+        entity = self.entity_repo.create_entity(11, "location")
+        state = self.state_repo.update_state(
+            self.fake_state.id, "add", "location", 30, entity)
+        self.assertEqual(state, self.fake_state_update)
