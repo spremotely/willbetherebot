@@ -1,12 +1,12 @@
 import os
 import unittest
 
-from data.alchemychatrepo import AlchemyChatRepo
-from data.alchemychatstaterepo import AlchemyChatStateRepo
-from data.alchemycontext import AlchemyContext
-from data.alchemyentityrepo import AlchemyEntityRepo
-from data.alchemyphotorepo import AlchemyPhotoRepo
-from data.alchemyuserrepo import AlchemyUserRepo
+from data.alchemy.alchemychatrepo import AlchemyChatRepo
+from data.alchemy.alchemychatstaterepo import AlchemyChatStateRepo
+from data.alchemy.alchemycontext import AlchemyContext
+from data.alchemy.alchemyentityrepo import AlchemyEntityRepo
+from data.alchemy.alchemyphotorepo import AlchemyPhotoRepo
+from data.alchemy.alchemyuserrepo import AlchemyUserRepo
 
 
 class FakeChat:

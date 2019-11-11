@@ -1,5 +1,5 @@
 from data.chatrepo import ChatRepo
-from models import Chat
+from data.models import Chat
 
 
 class AlchemyChatRepo(ChatRepo):

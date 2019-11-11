@@ -1,5 +1,5 @@
 from data.photorepo import PhotoRepo
-from models import Photo
+from data.models import Photo
 
 
 class AlchemyPhotoRepo(PhotoRepo):

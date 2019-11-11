@@ -1,5 +1,5 @@
 from data.entityrepo import EntityRepo
-from models import Entity
+from data.models import Entity
 
 
 class AlchemyEntityRepo(EntityRepo):

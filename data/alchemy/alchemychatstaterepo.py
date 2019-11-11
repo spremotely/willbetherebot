@@ -1,4 +1,4 @@
-from models import ChatState
+from data.models import ChatState
 from data.chatstaterepo import ChatStateRepo
 
 

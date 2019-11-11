@@ -1,5 +1,5 @@
 from data.userrepo import UserRepo
-from models import User
+from data.models import User
 
 
 class AlchemyUserRepo(UserRepo):

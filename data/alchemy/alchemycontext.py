@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from data.context import Context
-from models import Base
+from data.models import Base
 
 
 class AlchemyContext(Context):

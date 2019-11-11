@@ -2,10 +2,10 @@ import yaml
 import telebot
 
 import scenario
-from data.alchemychatrepo import AlchemyChatRepo
-from data.alchemycontext import AlchemyContext
-from data.alchemychatstaterepo import AlchemyChatStateRepo
-from data.alchemyuserrepo import AlchemyUserRepo
+from data.alchemy.alchemychatrepo import AlchemyChatRepo
+from data.alchemy.alchemycontext import AlchemyContext
+from data.alchemy.alchemychatstaterepo import AlchemyChatStateRepo
+from data.alchemy.alchemyuserrepo import AlchemyUserRepo
 from scenario.start.welcome import Welcome
 from scenario.add.welcome import Welcome
 from scenario.add.photo import Photo
