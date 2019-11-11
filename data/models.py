@@ -8,7 +8,6 @@ Base = declarative_base()
 
 
 class User(Base):
-
     __tablename__ = "user"
 
     id = Column(BigInteger, primary_key=True)
@@ -36,7 +35,6 @@ class User(Base):
 
 
 class Chat(Base):
-
     __tablename__ = "chat"
 
     id = Column(BigInteger, primary_key=True)
@@ -51,9 +49,7 @@ class Chat(Base):
         return f"<Chat({self.id}, {self.type})>"
 
 
-
 class ChatState(Base):
-
     __tablename__ = "chat_state"
 
     id = Column(Integer, primary_key=True)
@@ -81,7 +77,6 @@ class ChatState(Base):
 
 
 class Entity(Base):
-
     __tablename__ = "entity"
 
     id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
@@ -98,7 +93,6 @@ class Entity(Base):
 
 
 class Photo(Base):
-
     __tablename__ = "photo"
 
     id = Column(Integer, primary_key=True)
@@ -113,17 +107,23 @@ class Photo(Base):
 
 
 class Location(Base):
-
     __tablename__ = "location"
 
     id = Column(Integer, primary_key=True)
     photo_id = Column(Integer, ForeignKey('photo.id'))
     photo = relationship("Photo", back_populates="location")
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User", back_populates="location")
+    chat_id = Column(Integer, ForeignKey('chat.id'))
+    chat = relationship("Chat", back_populates="location")
     longitude = Column(String(50))
     latitude = Column(String(50))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, longitude, latitude):
+    def __init__(self, chat, user, photo, longitude, latitude):
+        self.chat = chat
+        self.user = user
+        self.photo = photo
         self.longitude = longitude
         self.latitude = latitude
 
