@@ -98,6 +98,19 @@ class Entity(Base):
     entity_type = Column(String(50))
     state = relationship("State", uselist=False, back_populates="entity")
 
+    def __init__(self, entity_id, entity_type):
+        self.entity_id = entity_id
+        self.entity_type = entity_type
+
+    def __repr__(self):
+        return f"<Entity({self.id}, {self.entity_id}, {self.entity_type})>"
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.entity_id == self.entity_id and \
+            other.entity_type == self.entity_type and \
+            other.state == self.state
+
 
 class Photo(Base):
 
@@ -107,6 +120,15 @@ class Photo(Base):
     uri = Column(String(1000))
     location = relationship("Location", uselist=False, back_populates="photo")
 
+    def __init__(self, uri):
+        self.uri = uri
+
+    def __repr__(self):
+        return f"<Photo({self.id}, {self.uri}, {self.location})>"
+
+    def __eq__(self, other):
+        return other.id == self.id and other.uri == self.uri and other.location == self.location
+
 
 class Location(Base):
 
@@ -115,6 +137,21 @@ class Location(Base):
     id = Column(Integer, primary_key=True)
     photo_id = Column(Integer, ForeignKey('photo.id'))
     photo = relationship("Photo", back_populates="location")
-    Longitude = Column(String(50))
-    Latitude = Column(String(50))
+    longitude = Column(String(50))
+    latitude = Column(String(50))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    def __init__(self, longitude, latitude):
+        self.longitude = longitude
+        self.latitude = latitude
+
+    def __repr__(self):
+        return f"<Location({self.id}, {self.photo_id}, {self.longitude}, {self.latitude}, {self.created_at})>"
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.photo_id == self.photo_id and \
+            other.photo == self.photo and \
+            other.longitude == self.longitude and \
+            other.latitude == self.latitude and \
+            other.created_at == self.created_at

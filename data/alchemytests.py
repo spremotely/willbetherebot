@@ -50,3 +50,4 @@ class AlchemyUserRepoTest(AlchemyRepo):
     def test_get_user(self):
         user = self.user_repo.get_user(self.user.id)
         self.assertEqual(user, self.user)
+
