@@ -3,6 +3,7 @@ import unittest
 
 from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
+from data.alchemyentityrepo import AlchemyEntityRepo
 from data.alchemystaterepo import AlchemyStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
 from models import User, Chat, ChatState, Entity
@@ -55,6 +56,18 @@ class AlchemyUserRepoTest(AlchemyRepo):
     def test_get_user(self):
         user = self.user_repo.get_user(self.user.id)
         self.assertEqual(user, self.user)
+
+
+class AlchemyEntityRepoTest(AlchemyRepo):
+
+    def setUp(self):
+        self.entity_repo = AlchemyEntityRepo(self.context)
+        self.entity = Entity(10, "photo")
+        self.entity.id = 1
+
+    def test_create_entity(self):
+        entity = self.entity_repo.create_entity(self.entity.entity_id, self.entity.entity_type)
+        self.assertEqual(entity, self.entity)
 
 
 class AlchemyStateRepoTest(AlchemyRepo):

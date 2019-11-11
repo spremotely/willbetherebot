@@ -11,12 +11,12 @@ class User(Base):
 
     __tablename__ = "user"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=False)
+    id = Column(BigInteger, primary_key=True)
     user_name = Column(String(100))
     first_name = Column(String(100))
     last_name = Column(String(100))
     is_bot = Column(Boolean)
-    state = relationship("State", uselist=False, back_populates="user")
+    state = relationship("ChatState", uselist=False, back_populates="user")
 
     def __init__(
             self,
@@ -46,9 +46,9 @@ class Chat(Base):
 
     __tablename__ = "chat"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=False)
+    id = Column(BigInteger, primary_key=True)
     type = Column(String(50))
-    state = relationship("State", uselist=False, back_populates="chat")
+    state = relationship("ChatState", uselist=False, back_populates="chat")
 
     def __init__(self, chat_id, chat_type):
         self.id = chat_id
@@ -63,7 +63,7 @@ class Chat(Base):
 
 class ChatState(Base):
 
-    __tablename__ = "state"
+    __tablename__ = "chat_state"
 
     id = Column(Integer, primary_key=True)
     chat_id = Column(BigInteger, ForeignKey('chat.id'))
@@ -103,10 +103,10 @@ class Entity(Base):
 
     __tablename__ = "entity"
 
-    id = Column(BigInteger, primary_key=True)
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
     entity_id = Column(Integer)
     entity_type = Column(String(50))
-    state = relationship("State", uselist=False, back_populates="entity")
+    state = relationship("ChatState", uselist=False, back_populates="entity")
 
     def __init__(self, entity_id, entity_type):
         self.entity_id = entity_id
