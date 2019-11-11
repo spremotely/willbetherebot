@@ -34,13 +34,6 @@ class User(Base):
     def __repr__(self):
         return f"<User({self.id}, {self.user_name}, {self.first_name}, {self.last_name}, {self.is_bot})>"
 
-    def __eq__(self, other):
-        return other.id == self.id \
-            and other.user_name == self.user_name \
-            and other.first_name == self.first_name \
-            and other.last_name == self.last_name \
-            and other.is_bot == self.is_bot
-
 
 class Chat(Base):
 
@@ -77,23 +70,23 @@ class ChatState(Base):
     state = Column(String(50))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, chat_id, user_id, message_id, command, state, entity_id=None):
-        self.chat_id = chat_id
-        self.user_id = user_id
+    def __init__(self, chat, user, message_id, command, state, entity=None):
+        self.chat = chat
+        self.user = user
         self.message_id = message_id
         self.command = command
         self.state = state
-        self.entity_id = entity_id
+        self.entity = entity
 
     def __repr__(self):
-        return f"<State({self.id}, {self.chat_id}, {self.user_id}, {self.message_id}, {self.command}, {self.state}, {self.updated_at})>"
+        return f"<State({self.id}, {self.chat}, {self.user}, {self.message_id}, {self.command}, {self.state}, {self.entity}, {self.updated_at})>"
 
     def __eq__(self, other):
         return other.id == self.id and \
-            other.chat == self.chat and \
-            other.user == self.user and \
+            other.chat_id == self.chat_id and \
+            other.user_id == self.user_id and \
             other.message_id == self.message_id and \
-            other.entity == self.entity and \
+            other.entity_id == self.entity_id and \
             other.command == self.command and \
             other.state == self.state and \
             other.updated_at == self.updated_at
@@ -118,8 +111,7 @@ class Entity(Base):
     def __eq__(self, other):
         return other.id == self.id and \
             other.entity_id == self.entity_id and \
-            other.entity_type == self.entity_type and \
-            other.state == self.state
+            other.entity_type == self.entity_type
 
 
 class Photo(Base):
@@ -161,7 +153,6 @@ class Location(Base):
     def __eq__(self, other):
         return other.id == self.id and \
             other.photo_id == self.photo_id and \
-            other.photo == self.photo and \
             other.longitude == self.longitude and \
             other.latitude == self.latitude and \
             other.created_at == self.created_at

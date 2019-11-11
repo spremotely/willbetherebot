@@ -4,9 +4,34 @@ import unittest
 from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemyentityrepo import AlchemyEntityRepo
-from data.alchemystaterepo import AlchemyStateRepo
+from data.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
 from models import User, Chat, ChatState, Entity
+
+
+class FakeUser:
+
+    def __init__(
+            self,
+            user_id,
+            user_name,
+            first_name,
+            last_name,
+            is_bot,
+            state):
+        self.id = user_id
+        self.user_name = user_name
+        self.first_name = first_name
+        self.last_name = last_name
+        self.is_bot = is_bot
+        self.state = state
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.user_name == self.user_name and \
+            other.first_name == self.first_name and \
+            other.last_name == self.last_name and \
+            other.is_bot == self.is_bot
 
 
 class AlchemyRepo(unittest.TestCase):
@@ -43,7 +68,7 @@ class AlchemyUserRepoTest(AlchemyRepo):
 
     def setUp(self):
         self.user_repo = AlchemyUserRepo(self.context)
-        self.user = User(1, "user name", "first name", "last name")
+        self.user = FakeUser(1, "user name", "first name", "last name", False, None)
 
     def test_create_user(self):
         user = self.user_repo.create_user(
@@ -51,6 +76,7 @@ class AlchemyUserRepoTest(AlchemyRepo):
             self.user.user_name,
             self.user.first_name,
             self.user.last_name)
+        print(user, self.user)
         self.assertEqual(user, self.user)
 
     def test_get_user(self):
@@ -66,28 +92,40 @@ class AlchemyEntityRepoTest(AlchemyRepo):
         self.entity.id = 1
 
     def test_create_entity(self):
-        entity = self.entity_repo.create_entity(self.entity.entity_id, self.entity.entity_type)
+        entity = self.entity_repo.create_entity(
+            self.entity.entity_id, self.entity.entity_type)
         self.assertEqual(entity, self.entity)
 
 
 class AlchemyStateRepoTest(AlchemyRepo):
 
     def setUp(self):
-        self.state_repo = AlchemyStateRepo(self.context)
-        self.chat = Chat(10, "private")
-        self.user = User(20, "user name", "first name", "last name")
-        self.entity = Entity(30, "photo")
-        self.state = ChatState(30, "add", "welcome")
-        self.state.chat = self.chat
-        self.state.user = self.user
-        self.state.entity = self.entity
+        self.chat_repo = AlchemyChatRepo(self.context)
+        self.user_repo = AlchemyUserRepo(self.context)
+        self.entity_repo = AlchemyEntityRepo(self.context)
+        self.state_repo = AlchemyChatStateRepo(self.context)
+        self.chat = self.chat_repo.create_chat(10, "private")
+        self.user = self.user_repo.create_user(
+            20,
+            "user name",
+            "first name",
+            "last name")
+        self.entity = self.entity_repo.create_entity(
+            30, "photo")
 
     def test_create_state(self):
         state = self.state_repo.create_state(
             self.chat,
             self.user,
-            self.state.message_id,
-            self.state.command,
-            self.state.state,
+            40,
+            "add",
+            "welcome",
             self.entity)
-        print(state)
+        with self.subTest(state=state):
+            self.assertEqual(state.chat_id, self.chat.id)
+        with self.subTest(state=state):
+            self.assertEqual(state.user_id, self.user.id)
+        with self.subTest(state=state):
+            self.assertEqual(state.entity_id, self.entity.id)
+        with self.subTest(state=state):
+            self.assertEqual(state.id, 1)

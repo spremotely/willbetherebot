@@ -4,7 +4,7 @@ import telebot
 import scenario
 from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemycontext import AlchemyContext
-from data.alchemystaterepo import AlchemyStateRepo
+from data.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
 from scenario.start.welcome import Welcome
 from scenario.add.welcome import Welcome
@@ -16,7 +16,7 @@ with open("config.yml", 'r') as config_file:
 bot = telebot.TeleBot(config['bot']['token'])
 context = AlchemyContext(
     f"mysql+mysqlconnector://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['name']}")
-state_repo = AlchemyStateRepo(context)
+state_repo = AlchemyChatStateRepo(context)
 user_repo = AlchemyUserRepo(context)
 chat_repo = AlchemyChatRepo(context)
 
