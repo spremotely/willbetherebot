@@ -2,18 +2,17 @@ import os
 import unittest
 
 from data.alchemychatrepo import AlchemyChatRepo
+from data.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemyentityrepo import AlchemyEntityRepo
-from data.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemyuserrepo import AlchemyUserRepo
-from models import User, Chat, ChatState, Entity
 
 
 class FakeChat:
 
-    def __init__(self, pk, type, state):
+    def __init__(self, pk, chat_type, state):
         self.id = pk
-        self.type = type
+        self.type = chat_type
         self.state = state
 
     def __eq__(self, other):
