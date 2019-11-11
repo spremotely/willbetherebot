@@ -61,7 +61,7 @@ class Chat(Base):
         return other.id == self.id and other.type == self.type
 
 
-class State(Base):
+class ChatState(Base):
 
     __tablename__ = "state"
 
@@ -77,10 +77,13 @@ class State(Base):
     state = Column(String(50))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, message_id, command, state):
+    def __init__(self, chat_id, user_id, message_id, command, state, entity_id=None):
+        self.chat_id = chat_id
+        self.user_id = user_id
         self.message_id = message_id
         self.command = command
         self.state = state
+        self.entity_id = entity_id
 
     def __repr__(self):
         return f"<State({self.id}, {self.chat_id}, {self.user_id}, {self.message_id}, {self.command}, {self.state}, {self.updated_at})>"
