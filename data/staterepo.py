@@ -10,9 +10,9 @@ class StateRepo(Repo):
         pass
 
     @abstractmethod
-    def create_state(self, chat, user, message_id, command, state_value, entity=None):
+    def create_state(self, chat, user, message_id, command, state_value, entity):
         pass
 
     @abstractmethod
-    def update_state(self, state_id, command, state_value, entity=None):
+    def update_state(self, state_id, command, state_value):
         pass

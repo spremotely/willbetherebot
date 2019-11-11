@@ -77,16 +77,23 @@ class State(Base):
     state = Column(String(50))
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, chat, user, message_id, command, state, entity=None):
-        self.chat = chat
-        self.user = user
+    def __init__(self, message_id, command, state):
         self.message_id = message_id
         self.command = command
         self.state = state
-        self.entity = entity
 
     def __repr__(self):
         return f"<State({self.id}, {self.chat_id}, {self.user_id}, {self.message_id}, {self.command}, {self.state}, {self.updated_at})>"
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.chat == self.chat and \
+            other.user == self.user and \
+            other.message_id == self.message_id and \
+            other.entity == self.entity and \
+            other.command == self.command and \
+            other.state == self.state and \
+            other.updated_at == self.updated_at
 
 
 class Entity(Base):
