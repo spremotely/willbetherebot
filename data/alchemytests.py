@@ -5,15 +5,15 @@ from data.alchemychatrepo import AlchemyChatRepo
 from data.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemycontext import AlchemyContext
 from data.alchemyentityrepo import AlchemyEntityRepo
+from data.alchemyphotorepo import AlchemyPhotoRepo
 from data.alchemyuserrepo import AlchemyUserRepo
 
 
 class FakeChat:
 
-    def __init__(self, pk, chat_type, state):
+    def __init__(self, pk, chat_type):
         self.id = pk
         self.type = chat_type
-        self.state = state
 
     def __eq__(self, other):
         return other.id == self.id and other.type == self.type
@@ -27,14 +27,12 @@ class FakeUser:
             user_name,
             first_name,
             last_name,
-            is_bot,
-            state):
+            is_bot):
         self.id = user_id
         self.user_name = user_name
         self.first_name = first_name
         self.last_name = last_name
         self.is_bot = is_bot
-        self.state = state
 
     def __eq__(self, other):
         return other.id == self.id and \
@@ -86,7 +84,17 @@ class FakeChatState:
             other.command == self.command
 
 
-class AlchemyRepo(unittest.TestCase):
+class FakePhoto:
+
+    def __init__(self, pk, uri):
+        self.id = pk
+        self.uri = uri
+
+    def __eq__(self, other):
+        return other.id == self.id and other.uri == self.uri
+
+
+class AlchemyRepoTest(unittest.TestCase):
 
     db_filename = "test.db"
     context = None
@@ -101,11 +109,11 @@ class AlchemyRepo(unittest.TestCase):
         os.remove(cls.db_filename)
 
 
-class AlchemyChatRepoTest(AlchemyRepo):
+class AlchemyChatRepoTest(AlchemyRepoTest):
 
     def setUp(self):
         self.chat_repo = AlchemyChatRepo(self.context)
-        self.chat = FakeChat(1, "private", None)
+        self.chat = FakeChat(1, "private")
 
     def test_create_chat(self):
         chat = self.chat_repo.create_chat(self.chat.id, self.chat.type)
@@ -116,7 +124,7 @@ class AlchemyChatRepoTest(AlchemyRepo):
         self.assertEqual(chat, self.chat)
 
 
-class AlchemyUserRepoTest(AlchemyRepo):
+class AlchemyUserRepoTest(AlchemyRepoTest):
 
     def setUp(self):
         self.user_repo = AlchemyUserRepo(self.context)
@@ -125,8 +133,7 @@ class AlchemyUserRepoTest(AlchemyRepo):
             "user name",
             "first name",
             "last name",
-            False,
-            None)
+            False)
 
     def test_create_user(self):
         user = self.user_repo.create_user(
@@ -142,7 +149,7 @@ class AlchemyUserRepoTest(AlchemyRepo):
         self.assertEqual(user, self.user)
 
 
-class AlchemyEntityRepoTest(AlchemyRepo):
+class AlchemyEntityRepoTest(AlchemyRepoTest):
 
     def setUp(self):
         self.entity_repo = AlchemyEntityRepo(self.context)
@@ -155,7 +162,7 @@ class AlchemyEntityRepoTest(AlchemyRepo):
         self.assertEqual(entity, self.entity)
 
 
-class AlchemyStateRepoTest(AlchemyRepo):
+class AlchemyStateRepoTest(AlchemyRepoTest):
 
     def setUp(self):
         self.chat_repo = AlchemyChatRepo(self.context)
@@ -163,14 +170,13 @@ class AlchemyStateRepoTest(AlchemyRepo):
         self.entity_repo = AlchemyEntityRepo(self.context)
         self.state_repo = AlchemyChatStateRepo(self.context)
 
-        self.fake_chat = FakeChat(1, "private", None)
+        self.fake_chat = FakeChat(1, "private")
         self.fake_user = FakeUser(
             1,
             "user name",
             "first name",
             "last name",
-            False,
-            None)
+            False)
         self.fake_entity = FakeEntity(1, 10, "photo")
         self.fake_entity_update = FakeEntity(2, 11, "location")
         self.fake_state = FakeChatState(
@@ -221,3 +227,18 @@ class AlchemyStateRepoTest(AlchemyRepo):
         state = self.state_repo.update_state(
             self.fake_state.id, "add", "location", 30, entity)
         self.assertEqual(state, self.fake_state_update)
+
+
+class AlchemyPhotoRepoTest(AlchemyRepoTest):
+
+    def setUp(self):
+        self.photo_repo = AlchemyPhotoRepo(self.context)
+        self.fake_photo = FakePhoto(1, "test photo")
+
+    def test_create_photo(self):
+        photo = self.photo_repo.create_photo(self.fake_photo.uri)
+        self.assertEqual(photo, self.fake_photo)
+
+    def test_get_photo(self):
+        photo = self.photo_repo.get_photo(self.fake_photo.id)
+        self.assertEqual(photo, self.fake_photo)

@@ -6,9 +6,9 @@ from data.repo import Repo
 class PhotoRepo(Repo):
 
     @abstractmethod
-    def get_photo(self, photo_id):
+    def create_photo(self, uri):
         pass
 
     @abstractmethod
-    def create_photo(self, uri):
+    def get_photo(self, photo_id):
         pass
