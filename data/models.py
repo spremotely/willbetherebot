@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, BigInteger, Boolean, ForeignKey, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -16,6 +16,7 @@ class User(Base):
     last_name = Column(String(100))
     is_bot = Column(Boolean)
     state = relationship("ChatState", uselist=False, back_populates="user")
+    location = relationship("Location", back_populates="user")
 
     def __init__(
             self,
@@ -40,6 +41,7 @@ class Chat(Base):
     id = Column(BigInteger, primary_key=True)
     type = Column(String(50))
     state = relationship("ChatState", uselist=False, back_populates="chat")
+    location = relationship("Location", back_populates="chat")
 
     def __init__(self, chat_id, chat_type):
         self.id = chat_id
@@ -116,8 +118,8 @@ class Location(Base):
     user = relationship("User", back_populates="location")
     chat_id = Column(Integer, ForeignKey('chat.id'))
     chat = relationship("Chat", back_populates="location")
-    longitude = Column(String(50))
-    latitude = Column(String(50))
+    longitude = Column(Float)
+    latitude = Column(Float)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, chat, user, photo, longitude, latitude):

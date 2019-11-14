@@ -5,6 +5,7 @@ from data.alchemy.alchemychatrepo import AlchemyChatRepo
 from data.alchemy.alchemychatstaterepo import AlchemyChatStateRepo
 from data.alchemy.alchemycontext import AlchemyContext
 from data.alchemy.alchemyentityrepo import AlchemyEntityRepo
+from data.alchemy.alchemylocationrepo import AlchemyLocationRepo
 from data.alchemy.alchemyphotorepo import AlchemyPhotoRepo
 from data.alchemy.alchemyuserrepo import AlchemyUserRepo
 
@@ -92,6 +93,28 @@ class FakePhoto:
 
     def __eq__(self, other):
         return other.id == self.id and other.uri == self.uri
+
+
+class FakeLocation:
+
+    def __init__(self, pk, chat, user, photo, longitude, latitude):
+        self.id = pk
+        self.chat = chat
+        self.chat_id = chat.id
+        self.user = user
+        self.user_id = user.id
+        self.photo = photo
+        self.photo_id = photo.id
+        self.longitude = longitude
+        self.latitude = latitude
+
+    def __eq__(self, other):
+        return other.id == self.id and \
+            other.chat_id == self.chat_id and \
+            other.user_id == self.user_id and \
+            other.photo_id == self.photo_id and \
+            other.longitude == self.longitude and \
+            other.latitude == self.latitude
 
 
 class AlchemyRepoTest(unittest.TestCase):
@@ -242,3 +265,41 @@ class AlchemyPhotoRepoTest(AlchemyRepoTest):
     def test_get_photo(self):
         photo = self.photo_repo.get_photo(self.fake_photo.id)
         self.assertEqual(photo, self.fake_photo)
+
+
+class AlchemyLocationRepoTest(AlchemyRepoTest):
+
+    def setUp(self):
+        self.user_repo = AlchemyUserRepo(self.context)
+        self.chat_repo = AlchemyChatRepo(self.context)
+        self.photo_repo = AlchemyPhotoRepo(self.context)
+        self.location_repo = AlchemyLocationRepo(self.context)
+        self.fake_user = FakeUser(
+            1, "user name", "first name", "last name", False)
+        self.fake_chat = FakeChat(1, "private")
+        self.fake_photo = FakePhoto(1, "test photo")
+        self.fake_location = FakeLocation(
+            1,
+            self.fake_chat,
+            self.fake_user,
+            self.fake_photo,
+            64.44,
+            23.44)
+
+    def test_create_location(self):
+        user = self.user_repo.create_user(
+            self.fake_user.id,
+            self.fake_user.user_name,
+            self.fake_user.first_name,
+            self.fake_user.last_name,
+            self.fake_user.is_bot)
+        chat = self.chat_repo.create_chat(
+            self.fake_chat.id, self.fake_chat.type)
+        photo = self.photo_repo.create_photo(self.fake_photo.uri)
+        location = self.location_repo.create_location(
+            chat,
+            user,
+            photo,
+            self.fake_location.longitude,
+            self.fake_location.latitude)
+        self.assertEqual(location, self.fake_location)
