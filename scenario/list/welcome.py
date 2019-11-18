@@ -11,7 +11,7 @@ class Welcome(Scenario):
         super().__init__(scenario)
 
     def handle(self, chat, user, state, message):
-        if state.command == "list" and state.state == "welcome" and not self.is_command(
+        if state.command == "list" and state.state == "location" and not self.is_command(
                 message) and not self.is_location(message):
             return "message", self.MESSAGE
 
@@ -20,7 +20,7 @@ class Welcome(Scenario):
 
         if self.is_command(message, "list"):
             self.__state_repo.update_state(
-                state.id, message.message_id, "list", "welcome")
+                state.id, message.message_id, "list", "location")
             self.__context.save_changes()
             return "message", self.MESSAGE
 
