@@ -23,8 +23,7 @@ with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
 
 bot = telebot.TeleBot(config['bot']['token'])
-context = AlchemyContext(
-    f"mysql+mysqlconnector://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['name']}")
+context = AlchemyContext(config['db']['connector'])
 state_repo = AlchemyChatStateRepo(context)
 user_repo = AlchemyUserRepo(context)
 chat_repo = AlchemyChatRepo(context)
