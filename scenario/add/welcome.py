@@ -11,20 +11,14 @@ class Welcome(Scenario):
         super().__init__(scenario)
 
     def handle(self, chat, user, state, message):
-        if message.content_type != "text" or not message.text.startswith("/add"):
-            return super().handle(chat, user, state, message)
-
-        if not state:
-            self.__state_repo.create_state(chat, user, message.message_id, "add", "welcome")
-            self.__context.save_changes()
+        if state.command == "add" and state.state == "welcome" and not self.is_command(
+                message) and not self.is_location(message) and not self.is_photo(message):
             return self.MESSAGE
 
-        if state.command != "add":
-            self.__state_repo.update_state(state.id, "add", "welcome")
+        if self.is_command(message, "add"):
+            self.__state_repo.update_state(
+                state.id, message.message_id, "add", "welcome")
             self.__context.save_changes()
-            return self.MESSAGE
-
-        if state.command == "add" and state.state == "welcome":
             return self.MESSAGE
 
         return super().handle(chat, user, state, message)

@@ -17,7 +17,7 @@ class AlchemyChatStateRepo(ChatStateRepo):
         self._context.get_context().refresh(state)
         return state
 
-    def update_state(self, state_id, command, state_value, message_id, entity=None):
+    def update_state(self, state_id, message_id, command, state_value, entity=None):
         state = self._context.get_context().query(ChatState).filter_by(id=state_id).first()
 
         if not state:

@@ -60,7 +60,7 @@ class ChatState(Base):
     user_id = Column(BigInteger, ForeignKey('user.id'))
     user = relationship("User", back_populates="state")
     message_id = Column(BigInteger)
-    entity_id = Column(BigInteger, ForeignKey('entity.id'))
+    entity_id = Column(Integer, ForeignKey('entity.id'))
     entity = relationship("Entity", back_populates="state")
     command = Column(String(50))
     state = Column(String(50))
@@ -81,7 +81,7 @@ class ChatState(Base):
 class Entity(Base):
     __tablename__ = "entity"
 
-    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    id = Column(Integer, primary_key=True)
     entity_id = Column(Integer)
     entity_type = Column(String(50))
     state = relationship("ChatState", uselist=False, back_populates="entity")
@@ -114,9 +114,9 @@ class Location(Base):
     id = Column(Integer, primary_key=True)
     photo_id = Column(Integer, ForeignKey('photo.id'))
     photo = relationship("Photo", back_populates="location")
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(BigInteger, ForeignKey('user.id'))
     user = relationship("User", back_populates="location")
-    chat_id = Column(Integer, ForeignKey('chat.id'))
+    chat_id = Column(BigInteger, ForeignKey('chat.id'))
     chat = relationship("Chat", back_populates="location")
     longitude = Column(Float)
     latitude = Column(Float)
