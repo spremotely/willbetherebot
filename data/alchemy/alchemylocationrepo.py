@@ -14,5 +14,10 @@ class AlchemyLocationRepo(LocationRepo):
         self._context.get_context().refresh(location)
         return location
 
-    def get_locations(self, chat_id, user_id):
-        return self._context.get_context().query(Location).filter_by(chat_id=chat_id, user_id=user_id).all()
+    def get_locations(self, chat_id, user_id, limit=None):
+        if not limit:
+            return self._context.get_context().query(Location).filter_by(
+                chat_id=chat_id, user_id=user_id).all()
+
+        return self._context.get_context().query(Location).filter_by(
+            chat_id=chat_id, user_id=user_id).limit(limit).all()
