@@ -13,12 +13,12 @@ class Welcome(Scenario):
     def handle(self, chat, user, state, message):
         if state.command == "add" and state.state == "welcome" and not self.is_command(
                 message) and not self.is_location(message) and not self.is_photo(message):
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         if self.is_command(message, "add"):
             self.__state_repo.update_state(
                 state.id, message.message_id, "add", "welcome")
             self.__context.save_changes()
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         return super().handle(chat, user, state, message)

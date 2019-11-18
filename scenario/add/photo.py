@@ -22,7 +22,7 @@ class Photo(Scenario):
     def handle(self, chat, user, state, message):
         if state.command == "add" and state.state == "photo" and not self.is_command(
                 message) and not self.is_location(message):
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         if state.command == "add" and (
                 state.state == "welcome" or state.state == "photo") and self.is_photo(message):
@@ -31,6 +31,6 @@ class Photo(Scenario):
             self.__state_repo.update_state(
                 state.id, message.message_id, "add", "photo", entity)
             self.__context.save_changes()
-            return f"{self.PHOTO_SAVED_MESSAGE}\n{self.MESSAGE}"
+            return "message", f"{self.PHOTO_SAVED_MESSAGE}\n{self.MESSAGE}"
 
         return super().handle(chat, user, state, message)
