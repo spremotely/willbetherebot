@@ -5,6 +5,7 @@ class Welcome(Scenario):
     MESSAGE = "Этот бот сохраняет места для будущего посещения\n" \
               "/add - добавить место\n" \
               "/list_all - список всех сохраненных мест\n" \
+              "/list - список ближайших в радиуесе 500 метров мест\n" \
               "/reset - удалить все сохраненные места\n"
 
     def __init__(self, context, state_repo, scenario=None):
