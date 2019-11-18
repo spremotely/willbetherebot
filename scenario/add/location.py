@@ -26,6 +26,6 @@ class Location(Scenario):
                 chat, user, photo, message.location.longitude, message.location.latitude)
             self.__state_repo.update_state(state.id, message.message_id, "start", "welcome")
             self.__context.save_changes()
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         return super().handle(chat, user, state, message)

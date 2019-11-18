@@ -4,7 +4,8 @@ from scenario.scenario import Scenario
 class Welcome(Scenario):
     MESSAGE = "Этот бот сохраняет места для будущего посещения\n" \
               "/add - добавить место\n" \
-              "/list - список мест\n" \
+              "/list_all - список всех сохраненных мест\n" \
+              "/list - список ближайших в радиусе 500 метров мест\n" \
               "/reset - удалить все сохраненные места\n"
 
     def __init__(self, context, state_repo, scenario=None):
@@ -17,16 +18,16 @@ class Welcome(Scenario):
             self.__state_repo.create_state(
                 chat, user, message.message_id, "start", "welcome")
             self.__context.save_changes()
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         if state.command == "start" and state.state == "welcome" and not self.is_command(
                 message):
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         if self.is_command(message, "start"):
             self.__state_repo.update_state(
                 state.id, message.message_id, "start", "welcome")
             self.__context.save_changes()
-            return self.MESSAGE
+            return "message", self.MESSAGE
 
         return super().handle(chat, user, state, message)

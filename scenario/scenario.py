@@ -1,3 +1,4 @@
+import re
 from abc import ABC, abstractmethod
 
 
@@ -15,11 +16,14 @@ class Scenario(ABC):
         return
 
     @staticmethod
-    def is_command(message, command=None):
+    def is_command(message, command=None, pattern=None):
         if not command:
             return message.content_type == "text" and message.text.startswith("/")
 
-        return message.content_type == "text" and message.text.startswith(f"/{command}")
+        if not pattern:
+            return message.content_type == "text" and message.text.startswith(f"/{command}")
+
+        return re.match(f"/{command} {pattern}", message.text)
 
     @staticmethod
     def is_text(message):
@@ -32,3 +36,7 @@ class Scenario(ABC):
     @staticmethod
     def is_photo(message):
         return message.content_type == "photo"
+
+    @staticmethod
+    def get_number(message, command, pattern):
+        return re.search(f"/{command} ({pattern})", message.text).group(1)

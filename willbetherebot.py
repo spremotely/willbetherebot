@@ -13,6 +13,9 @@ from scenario.start.welcome import Welcome
 from scenario.add.welcome import Welcome
 from scenario.add.photo import Photo
 from scenario.add.location import Location
+from scenario.list.listall import ListAll
+from scenario.list.welcome import Welcome
+from scenario.list.list import List
 from scenario.default.default import Default
 
 with open("config.yml", 'r') as config_file:
@@ -32,10 +35,18 @@ entity_repo = AlchemyEntityRepo(context)
 @bot.message_handler(content_types=['text', 'photo', 'location'])
 def any_message(message):
     chat, user = process_chat_user(message)
-    result = process_scenario(chat, user, message)
+    ans_type, ans = process_scenario(chat, user, message)
 
-    if result:
-        bot.send_message(chat_id=message.chat.id, text=result)
+    if not ans:
+        return
+
+    if ans_type == "message":
+        bot.send_message(chat_id=message.chat.id, text=ans)
+
+    if ans_type == "locations":
+        for location in ans:
+            bot.send_photo(chat_id=message.chat.id, photo=location.photo.uri)
+            bot.send_location(chat_id=message.chat.id, latitude=location.latitude, longitude=location.longitude)
 
 
 def process_chat_user(message):
@@ -61,8 +72,11 @@ def process_chat_user(message):
 def process_scenario(chat, user, message):
     state = state_repo.get_state(chat.id, user.id)
     default_scenario = scenario.default.default.Default()
+    list_scenario = scenario.list.list.List(context, state_repo, location_repo, default_scenario)
+    list_welcome_scenario = scenario.list.welcome.Welcome(context, state_repo, list_scenario)
+    list_all_scenario = scenario.list.listall.ListAll(location_repo, list_welcome_scenario)
     add_location_scenario = scenario.add.location.Location(
-        context, state_repo, photo_repo, location_repo, default_scenario)
+        context, state_repo, photo_repo, location_repo, list_all_scenario)
     add_photo_scenario = scenario.add.photo.Photo(
         context, state_repo, photo_repo, entity_repo, add_location_scenario)
     add_welcome_scenario = scenario.add.welcome.Welcome(
