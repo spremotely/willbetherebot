@@ -1,7 +1,7 @@
 bot:
   token: 968428867:AAHrsueLKGNOT2mKEQfcyGaIykHqdeGzOvg
 db:
-  host: ''
-  port: ''
-  username: ''
-  password: ''
+  host: 'localhost'
+  name: 'willbetherebot'
+  username: 'root'
+  password: '1234567890'
