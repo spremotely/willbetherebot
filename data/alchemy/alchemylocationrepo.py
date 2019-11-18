@@ -21,3 +21,6 @@ class AlchemyLocationRepo(LocationRepo):
 
         return self._context.get_context().query(Location).filter_by(
             chat_id=chat_id, user_id=user_id).limit(limit).all()
+
+    def clear_locations(self, chat_id, user_id):
+        self._context.get_context().query(Location).filter_by(chat_id=chat_id, user_id=user_id).delete()

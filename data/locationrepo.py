@@ -12,3 +12,7 @@ class LocationRepo(Repo):
     @abstractmethod
     def get_locations(self, chat_id, user_id, limit=None):
         pass
+
+    @abstractmethod
+    def clear_locations(self, chat_id, user_id):
+        pass

@@ -6,6 +6,7 @@ from scenario.scenario import Scenario
 class List(Scenario):
 
     EARTH_RADIUS = 6371.0
+    NO_LOCATIONS_MESSAGE = "Не найдено ближайших мест"
 
     def __init__(self, context, state_repo, location_repo, scenario=None):
         self.__context = context
@@ -22,6 +23,9 @@ class List(Scenario):
             locations = self.__location_repo.get_locations(chat.id, user.id)
             locations = self.patch_locations_by_distances(message.location, locations)
             locations = [location for location, distance in locations if distance <= 0.5]
+
+            if len(locations) == 0:
+                return "message", self.NO_LOCATIONS_MESSAGE
             return "locations", locations
 
         return super().handle(chat, user, state, message)
