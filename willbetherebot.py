@@ -38,6 +38,8 @@ entity_repo = AlchemyEntityRepo(context)
 
 @bot.message_handler(content_types=['text', 'photo', 'location'])
 def any_message(message):
+    context.create_context()
+
     chat, user = process_chat_user(message)
     ans_type, ans = process_scenario(chat, user, message)
 
