@@ -24,12 +24,9 @@ from scenario.default.default import Default
 with open("config.yml", 'r') as config_file:
     config = yaml.load(config_file, Loader=yaml.Loader)
 
-if os.environ['MODE'] and os.environ['MODE'] == 'RELEASE':
-    bot = telebot.TeleBot(os.environ['BOT_TOKEN'])
-    context = AlchemyContext(os.environ['DB_CONNECTOR'])
-else:
-    bot = telebot.TeleBot(config['bot']['token'])
-    context = AlchemyContext(config['db']['connector'])
+
+bot = telebot.TeleBot(config['bot']['token'])
+context = AlchemyContext(config['db']['connector'])
 
 state_repo = AlchemyChatStateRepo(context)
 user_repo = AlchemyUserRepo(context)
